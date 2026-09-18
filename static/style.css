@@ -269,6 +269,26 @@ html, body {
   word-break: break-all;
 }
 
+.download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 13px;
+  text-decoration: none;
+  color: var(--ink);
+  background: var(--lime);
+  border: 2.5px solid var(--ink);
+  border-radius: 12px;
+  padding: 10px 16px;
+  white-space: nowrap;
+  box-shadow: 3px 3px 0 var(--ink);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+.download-btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
+.download-btn:active { transform: translate(1px, 1px); box-shadow: 1px 1px 0 var(--ink); }
+
 .foot {
   margin-top: 26px;
   text-align: center;

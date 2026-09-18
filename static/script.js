@@ -11,6 +11,7 @@ const choiceText = document.getElementById("choice-text");
 const choiceLowerBtn = document.getElementById("choice-lower");
 const choiceShortenBtn = document.getElementById("choice-shorten");
 const durationInput = document.getElementById("duration");
+const downloadBtn = document.getElementById("result-download");
 
 let currentAction = document.querySelector(".chip.active").dataset.action;
 let currentEmoji = document.querySelector(".chip.active").dataset.emoji;
@@ -98,6 +99,7 @@ async function submit(extra = {}) {
   resultEl.hidden = true;
   statusEl.hidden = true;
   choiceBox.hidden = true;
+  downloadBtn.hidden = true;
 
   if (!url) {
     showStatus("Paste a link first, bestie 👀", "error");
@@ -134,6 +136,13 @@ async function submit(extra = {}) {
     if (data.note) metaParts.push(data.note);
     document.getElementById("result-meta").textContent = metaParts.join(" — ");
     document.getElementById("result-path").textContent = data.path;
+    if (data.download_url) {
+      downloadBtn.href = data.download_url;
+      downloadBtn.setAttribute("download", data.filename);
+      downloadBtn.hidden = false;
+    } else {
+      downloadBtn.hidden = true;
+    }
     emojiBurst(runBtn, BURST_SETS.success, 14);
   } catch (err) {
     showStatus("Couldn't reach the local server. Is app.py still running?", "error");

@@ -14,7 +14,7 @@ import threading
 import uuid
 from pathlib import Path
 
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory, abort
 
 # ---------------------------------------------------------------------------
 # CONFIG
@@ -453,6 +453,20 @@ def index():
     return render_template("index.html", actions=ACTIONS)
 
 
+@app.route("/api/download/<path:filename>")
+def download_file(filename):
+    # Serves a finished file back over HTTP. This matters once the app runs
+    # somewhere other than your own PC (e.g. Render): the browser can't just
+    # read a path on the server's disk the way it could read a path on your
+    # own machine, so the finished file has to be sent back as an actual HTTP
+    # response. send_from_directory also blocks path-traversal attempts
+    # (e.g. "../../etc/passwd") on its own.
+    target = (OUTPUT_DIR / filename).resolve()
+    if OUTPUT_DIR.resolve() not in target.parents or not target.is_file():
+        abort(404)
+    return send_from_directory(OUTPUT_DIR, filename, as_attachment=True)
+
+
 @app.route("/api/process", methods=["POST"])
 def process():
     data = request.get_json(force=True)
@@ -502,6 +516,7 @@ def process():
         "ok": True,
         "filename": final_path.name,
         "path": str(final_path),
+        "download_url": f"/api/download/{final_path.name}",
         "size_kb": size_kb,
         "note": note,
     })

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Clip Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="bg-dots" aria-hidden="true"></div>
+
+<main class="wrap">
+
+  <header class="head">
+    <div class="badge">⚡ LOCAL TOOLKIT</div>
+    <h1 class="title">Clip Desk<span class="title-dot">.</span></h1>
+    <p class="sub">Paste a link. Pick a vibe. Get your file. No cap.</p>
+  </header>
+
+  <section class="card">
+
+    <div class="field-group">
+      <label class="label">what are we making</label>
+      <div class="chips" id="action-chips">
+        {% set emojis = {"audio_only":"🎧","full_video":"🎬","trim_clip":"✂️","gif":"🌀","sticker":"🏷️","trim_mp3":"🎵"} %}
+        {% set colors = {"audio_only":"pink","full_video":"cyan","trim_clip":"lime","gif":"pink","sticker":"cyan","trim_mp3":"lime"} %}
+        {% for key, a in actions.items() %}
+        <button type="button"
+                class="chip chip-{{ colors[key] }}{% if loop.first %} active{% endif %}"
+                data-action="{{ key }}"
+                data-needs-time="{{ a.needs_time|lower }}"
+                data-emoji="{{ emojis[key] }}">
+          <span class="chip-emoji">{{ emojis[key] }}</span>
+          <span>{{ a.label }}</span>
+        </button>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="label" for="url">the link</label>
+      <input id="url" class="input mono" type="text" placeholder="https://..." autocomplete="off">
+      <p class="hint">YouTube, Shorts, TikTok, Twitter/X, Instagram, Reddit, Tenor — anything goes.</p>
+    </div>
+
+    <div class="field-row" id="time-fields" hidden>
+      <div class="field-group half">
+        <label class="label" for="start">start</label>
+        <input id="start" class="input mono" type="text" placeholder="00:00:02.45">
+      </div>
+      <div class="field-group half">
+        <label class="label" for="duration">duration</label>
+        <input id="duration" class="input mono" type="text" placeholder="1.29">
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="label" for="filename">name it</label>
+      <input id="filename" class="input mono" type="text" placeholder="output" value="output">
+    </div>
+
+    <button id="run" class="run-btn">
+      <span class="run-label">Let's go</span>
+      <span class="run-emoji">🚀</span>
+      <span class="spinner" hidden></span>
+    </button>
+
+    <div class="status" id="status" hidden></div>
+
+    <div class="choice-box" id="choice-box" hidden>
+      <div class="choice-text" id="choice-text"></div>
+      <div class="choice-buttons">
+        <button class="choice-btn choice-lime" id="choice-lower">📉 Lower the quality for me</button>
+        <button class="choice-btn choice-cyan" id="choice-shorten">✂️ I'll shorten it myself</button>
+      </div>
+    </div>
+
+    <div class="result" id="result" hidden>
+      <div class="result-row">
+        <div>
+          <div class="result-name" id="result-name"></div>
+          <div class="result-meta" id="result-meta"></div>
+          <div class="result-path mono" id="result-path"></div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+
+  <footer class="foot">
+    running local at <span class="mono">localhost:5000</span> · files land in <span class="mono">/downloads</span>
+  </footer>
+</main>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
